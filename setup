@@ -1,0 +1,9 @@
+npm init
+npm install express
+npm install body-parser
+npm install pg
+npm install -g tslint
+tslint --init
+Setup tsconfig.json
+npm install --only-dev @types/node
+npm install --only-dev @types/pg
