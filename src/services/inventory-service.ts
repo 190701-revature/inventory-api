@@ -1,6 +1,5 @@
 import Inventory from '../models/Inventory';
 import db from '../util/pg-connector';
-import { deepEqual } from 'assert';
 
 export function createInventory(inventory: Inventory):
     Promise<Inventory[]> {

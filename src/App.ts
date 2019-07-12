@@ -1,7 +1,9 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import session from 'express-session';
 import inventoryRouter from './routers/inventory-router';
 import { closePool } from './util/pg-connector';
+import userRouter from './routers/user-router';
 
 // Setup Express
 const app = express();
@@ -17,8 +19,15 @@ process.on('SIGINT', async () => {
 // Register middleware
 app.use(bodyParser.json());
 
+app.use(session({
+    resave: false,
+    saveUnitialized: true,
+    secret: 'my-secret',
+}));
+
 // Register routers
 app.use('/inventory', inventoryRouter);
+app.use('/users', userRouter);
 
 // Open port
 app.listen(port, () => {
