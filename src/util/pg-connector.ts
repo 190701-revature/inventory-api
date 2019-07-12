@@ -8,8 +8,8 @@ const db = new Pool({
     user: process.env.INVENTORY_USER || 'inventory_user',
 });
 
-export function closePool() {
-    db.end();
+export async function closePool() {
+    await db.end();
 }
 
 export default db;
