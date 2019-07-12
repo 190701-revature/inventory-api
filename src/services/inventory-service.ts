@@ -38,7 +38,8 @@ export async function patchInventory(patch: Inventory) {
         ...currentState, ...patch,
     };
 
-    const result = await db.query(`UPDATE inventory SET item_name = $1, quantity = $2 WHERE id = $3`,
+    const result = await db.query(`UPDATE inventory SET item_name = $1, quantity = $2 WHERE id = $3 
+    RETURNING id, item_name "itemName", quantity;`,
         [newState.itemName, newState.quantity, newState.id]);
 
     if (result.rowCount === 0) {
