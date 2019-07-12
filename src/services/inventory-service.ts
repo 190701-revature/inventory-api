@@ -1,5 +1,6 @@
 import Inventory from '../models/Inventory';
 import db from '../util/pg-connector';
+import { deepEqual } from 'assert';
 
 export function createInventory(inventory: Inventory):
     Promise<Inventory[]> {
@@ -27,6 +28,20 @@ export async function getInventoryById(id: number): Promise<Inventory> {
         FROM inventory WHERE id = $1`, [id]);
     return new Inventory(result.rows[0]);
 }
+
+export async function patchCoalesce(patch: Inventory) {
+    const result = await db.query(`UPDATE inventory SET item_name = COALESCE($1, item_name), \
+quantity = COALESCE($2, quantity) WHERE id = $3 \
+RETURNING id, item_name "itemName", quantity;`,
+        [patch.itemName, patch.quantity, patch.id]);
+
+    if (result.rowCount === 0) {
+        // throw error, 404
+    } else {
+        return result.rows[0];
+    }
+}
+
 
 export async function patchInventory(patch: Inventory) {
     if (!patch.id) {

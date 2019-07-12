@@ -38,8 +38,9 @@ inventoryRouter.patch('',
     async (request: Request, response: Response) => {
         const patch: Inventory = request.body;
 
-        const patchedInv: Inventory = await inventoryService.patchInventory(patch);
-
+        // const patchedInv: Inventory = await inventoryService.patchInventory(patch);
+        const patchedInv: Inventory = await inventoryService.patchCoalesce(patch);
+        
         if (patchedInv.id) {
             response.json(patchedInv);
         } else {

@@ -18,5 +18,3 @@ app.use('/inventory', inventoryRouter);
 app.listen(port, () => {
     console.log(`Application running on port ${port}.`);
 });
-
-
