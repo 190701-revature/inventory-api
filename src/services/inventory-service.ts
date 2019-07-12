@@ -28,47 +28,18 @@ export async function getInventoryById(id: number): Promise<Inventory> {
     return new Inventory(result.rows[0]);
 }
 
-export async function patch(patch: Inventory) {
+export async function patchInventory(patch: Inventory) {
     if (!patch.id) {
         // throw an error
     }
-    const columns = [];
-    const params = [];
 
-    if (patch.itemName) {
-        columns.push('item_name');
-        params.push(patch.itemName);
-    }
+    const currentState = await getInventoryById(patch.id);
+    const newState = {
+        ...currentState, ...patch,
+    };
 
-    if (!(patch.quantity === undefined)) {
-        columns.push('quantity');
-        params.push(patch.quantity);
-    }
-
-    let patchString = [];
-
-    // 
-    for (let i = 0; i < columns.length; i++) {
-        patchString.push(`${columns[i]} = $${i+1}`)
-    }
-
-    // UPDATE inventory SET item_name = $1 WHERE id = $2;
-    // UPDATE inventory set item_name = $1, quantity = $2 WHERE id = $3;
-
-//     console.log(`UPDATE inventory SET ${patchString.join(', ')} \
-// WHERE id = $${columns.length + 1} RETURNING *;`);
-
-//     console.log([...params, patch.id]);
-//     const result = await db.query(`UPDATE inventory ${patchString.join(', ')} \
-// WHERE id = $${columns.length + 1} returning *;`, [...params, patch.id]);
-    let counter = 1;
-    const result = await db.query(`UPDATE inventory SET\
-item_name = ${patch.itemName ? 'item_name' : `$${counter++}`},
-quantity = ${patch.quantity === undefined ? 'quantity' : `$${counter++}` } \
-WHERE id = $${patch.id}`, [...params, patch.id]);
-
-    // const result = await db.query(`UPDATE inventory SET quantity = $1
-    // WHERE id = $2 RETURNING *;`, [20, 3]);
+    const result = await db.query(`UPDATE inventory SET item_name = $1, quantity = $2 WHERE id = $3`,
+        [newState.itemName, newState.quantity, newState.id]);
 
     if (result.rowCount === 0) {
         // throw error, 404

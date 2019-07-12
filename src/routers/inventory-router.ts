@@ -38,12 +38,12 @@ inventoryRouter.patch('',
     async (request: Request, response: Response) => {
         const patch: Inventory = request.body;
 
-        const patchedInv: Inventory = await inventoryService.patch(patch);
+        const patchedInv: Inventory = await inventoryService.patchInventory(patch);
 
         if (patchedInv.id) {
             response.json(patchedInv);
         } else {
-            
+
         }
 
         response.sendStatus(200);

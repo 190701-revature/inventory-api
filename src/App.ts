@@ -1,18 +1,12 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import inventoryRouter from './routers/inventory-router';
-import { closePool } from './util/pg-connector';
 
 // Setup Express
 const app = express();
 
 // process
 const port = process.env.port || 3000;
-
-// Close the pool when app shuts down
-process.on('SIGINT', () => {
-    closePool();
-});
 
 // Register middleware
 app.use(bodyParser.json());
