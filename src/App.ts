@@ -11,11 +11,6 @@ const app = express();
 // process
 const port = process.env.port || 3000;
 
-// Close the pool when app shuts down
-process.on('SIGINT', async () => {
-    await closePool();
-});
-
 // Register middleware
 app.use(bodyParser.json());
 
